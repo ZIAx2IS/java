@@ -1,4 +1,4 @@
-package TPP_TEST;
+
 
 class CompteBanque{
 	private int solde;
@@ -63,7 +63,7 @@ class SanjiEtNamiJob implements Runnable{
 
 
 
-public class test5 {
+public class exo1 {
 
 public static void main(String[] args) {
 CompteBanque compte = new CompteBanque(500);
