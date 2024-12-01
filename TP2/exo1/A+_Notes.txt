@@ -1,0 +1,28 @@
+-- Source: ChatGPT :D
+---- Please, if you asked ChatGPT anything and would like to add it here, contact me!
+
+// READ THE CODE FIRST. COME BACK HERE IF YOU HAVE ANY QUESTIONS :)
+
+// NOTE: Why not make demandeRetrait() a synchronized method since most of its code is synchronized?
+//       --> It's not the instance of the SanjiEtNamiJob class that's shared; it's the instance of CompteBanque.
+//       --> Therefore, making demandeRetrait() synchronized is unnecessary and meaningless.
+//       --> We only want a portion of the code to execute while the thread has the lock, 
+//           not the entire method.
+
+// NOTE: Why use a synchronized block inside demandeRetrait()?
+//       --> To ensure that only one thread can access the critical section of code at a time.
+//       --> This prevents race conditions when multiple threads operate on the shared CompteBanque instance.
+
+// NOTE: Since the CompteBanque instance is shared, shouldn't we make void_retirer() a synchronized method?
+//       --> IN GENERAL: Yes.
+//       --> FOR OUR CASE: No.
+//       --> WHY: Because void_retirer() is used inside a single synchronized block, 
+//           which already guarantees that it will be executed by one thread at a time.
+
+// NOTE: Important considerations about synchronized blocks:
+//       --> A synchronized block only prevents race conditions.
+//       --> It DOES NOT guarantee that all threads will get a chance to execute the block.
+//       --> A thread can acquire and release the lock multiple times, potentially starving other threads.
+//       --> NEVER use Thread.sleep() inside a synchronized block.
+//           WHY: Because the thread holding the lock will block other threads from accessing the block 
+//           while it’s sleeping. Always use Thread.sleep() outside the synchronized block.
