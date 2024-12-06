@@ -1,0 +1,20 @@
+ // These two lines were replaces by a simpler operations to illustrate concurancy problem
+ // comptes[from] = comptes[from] - amount; --> non atomic operation  
+ // comptes[to]   = comptes[to] +  amount;	--> non atomic operation  
+	// operation steps
+		     //   Read comptes[to]
+			 //   add amount   
+			 //   write back to comptes[to] 
+	// case: TRANSFER TO THE SAME ACCOUNT
+			 // threads target the same to 
+			 //   thread 1 reads from comptes[to] val X
+			 //   computes X + amount and gets interrupted by thread 2
+			 //   thread 2 reads from comptes[to] val X computes X + amount 
+			 //   and updates comptes[to] to X + amount 
+			 //   thread 1 continues it's execution and updates comptes[to] to  X + amount 
+			 //   Now instead of comptes[to] = X + 2*amount  since two treads transferd to it
+			 //   we have comptes[to] = X + amount because of threda concurency :(
+			 // Solutions:
+			 //   non-optimized solution: synchronize the method void transferer() 
+			 //                           --> cause performance issue when treads don't access the same comptes[to]
+			 //   optimized solution: synchronize comptes[to]
