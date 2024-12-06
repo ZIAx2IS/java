@@ -4,10 +4,16 @@
 // READ THE CODE FIRST. COME BACK HERE IF YOU HAVE ANY QUESTIONS :)
 
 // NOTE: Why not make demandeRetrait() a synchronized method since most of its code is synchronized?
-//       --> It's not the instance of the SanjiEtNamiJob class that's shared; it's the instance of CompteBanque.
-//       --> Therefore, making demandeRetrait() synchronized is unnecessary and meaningless.
-//       --> We only want a portion of the code to execute while the thread has the lock, 
-//           not the entire method.
+//       --> A synchronized method locks the instance (this) on which it is called. 
+//       --> when Sanji starts executing the demandeRetrait() method, it will lock the SanjiEtNamiJob object it belongs to
+//       --> Also when Nami starts executing the demandeRetrait() method, it will lock the SanjiEtNamiJob object it belongs to
+//       --> Sanji and Nami don't share the same SanjiEtNamiJob object 
+//       --> so each thread will acquire its own lock independently. 
+//       --> Thus, the shared CompteBanque object is still accessed concurrently by both threads.
+//       --> is the problem gonna be solved if they sare the same object ?
+//           --> yes 
+
+
 
 // NOTE: Why use a synchronized block inside demandeRetrait()?
 //       --> To ensure that only one thread can access the critical section of code at a time.
