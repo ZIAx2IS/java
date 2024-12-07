@@ -1,4 +1,3 @@
-
 class Banque {
 	double[] comptes ;
 	
@@ -21,25 +20,30 @@ class Banque {
 		return total;
 	}
 	void transferer(int from,int to,double amount) {
-		 if( exist(from,amount)) {
-		    // reads notes to understand what am I doing here 
-			 double temp = comptes[from] - amount;
+		 if(comptes[from] >=  amount) {
+		    
+			comptes[from] = comptes[from] - amount;
+			
+			 // comptes[to]   = comptes[to] +  amount;  is a non-atomic operation
+			 // it consists of multiple low-level operations
+			 // read val of comptes[to] 
+			 // Perform the addition
+			 // Write the result back to comptes[to] 
+			 // a thread can be interrupted or preempted while executing comptes[to]   = comptes[to] +  amount; 
+			 // To illustrate the issue I split it 
+			 // Thread.sleep() to illustrate interruption in the process :)
+			 double temp = comptes[to] +  amount;
+			
 			 try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+			 } catch (InterruptedException e) {
 			
 				e.printStackTrace();
-			}
-			 comptes[from] = temp;
-			 temp = comptes[to] +  amount;
+			 }
 			 comptes[to]  = temp;
-			
+			 System.out.println("Transferred " + amount + " from " + from + " to " + to);
+			 System.out.println("Total: "+soldeTotal()); 
 		 } 
-	}
-	boolean exist(int index,double amount) {
-		    if( comptes[index] >=  amount)
-		    return true;
-		    return false;
 	}
 	
 }
@@ -48,30 +52,27 @@ class Transfert implements Runnable{
 	  Banque banque;
 	  int from;
 	  double amount;
-	  Transfert(Banque banque,int from,int amount){
+	  Transfert(Banque banque,int from,double amount){
 		  this.banque = banque;
 		  this.from = from;
 		  this.amount = amount;
 	  }
 	  public void run() {
 		  while(true) {
-			  if (banque.exist(from,amount)) {
-				  int to = (int) ( Math.random()*banque.size() ); 
-				  banque.transferer(from, to, amount);  
-				  System.out.println("Transferred " + amount + " from " + from + " to " + to);
-			  }
-			  else break;
+			int to = (int) ( Math.random()*banque.size() ); 
+			banque.transferer(from, to, amount);    
 		  }
 	  }
 }
 
-public class question1 {
+public class test6{
 	public static void main(String[] args) {
 		Banque banque = new Banque(5, 1000);
-		Thread[] threads = new Thread[10];
+		Thread[] threads = new Thread[banque.size()];
 		
 		for (int i = 0; i < banque.size(); i ++) {
-			Runnable r = new Transfert(banque,i,500);
+			double ammount = Math.random()*1000;
+			Runnable r = new Transfert(banque,i,ammount);
 			threads[i] = new Thread(r);
 			threads[i].start();
 		}
@@ -83,7 +84,7 @@ public class question1 {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(banque.soldeTotal()); 
+		
 	}
 
 }
