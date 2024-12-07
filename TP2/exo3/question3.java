@@ -95,7 +95,7 @@ class Ball {
 public class question3 {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-        	BallFiller frame = new BallFiller();
+        	BallAnimation frame = new BallAnimation();
             frame.setVisible(true);
         });
     }
